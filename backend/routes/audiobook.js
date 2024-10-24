@@ -1,13 +1,17 @@
 const express = require('express')
 const {
-  createAudiobook,
+  getAudiobookWithSpeech,
   getAudiobooks,
   getAudiobook,
+  createAudiobook,
   deleteAudiobook,
   updateAudiobook
 } = require('../controllers/audiobookController')
 
 const router = express.Router()
+
+
+router.get('/:id/speech', getAudiobookWithSpeech);
 
 // GET all audiobooks
 router.get('/', getAudiobooks)
