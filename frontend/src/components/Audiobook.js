@@ -1,33 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import AudiobookPlayer from './AudiobookPlayer';
+import { useAudiobooksContext } from '../hooks/useAudiobooksContext';
 
-const Audiobook = ({ audiobook }) => {
-    const playAudio = async () => {
+const Audiobook = ({ audiobook_id }) => {
+    const { audiobooks, dispatch } = useAudiobooksContext();
+    const audiobook = audiobooks.find((audiobook) => audiobook._id == audiobook_id)
+
+    const generateAudio = async () => {
         try {
-            const response = await fetch(`/api/audiobooks/${audiobook._id}/speech`);
+            if (audiobook.audioFilePath) {
+                console.log('Audio already loaded');
+            } else {
+                console.log('Fetching audio...');
+                const response = await fetch(`http://localhost:5001/api/audiobooks/${audiobook._id}/speech`);
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch audio');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch audio');
+                }
+                const audioBlob = await response.blob();
+                const url = URL.createObjectURL(audioBlob);
+                console.log('Setting audio URL from fetch:', url);
+
+                dispatch({
+                    type: 'UPDATE_AUDIOBOOK',
+                    payload: {
+                        ...audiobook,
+                        audioFilePath: url,
+                    },
+                });
             }
-
-            const audioBlob = await response.blob();
-            const audioUrl = URL.createObjectURL(audioBlob);
-
-            // Instead of using a JavaScript Audio object, try using the HTML audio element:
-            const audioElement = document.createElement('audio');
-            audioElement.src = audioUrl;
-            audioElement.controls = true;
-            document.body.appendChild(audioElement); // Add to the DOM for testing
-            audioElement.play();
         } catch (error) {
-            console.error('Error playing audio:', error);
+            console.error('Error generating audio:', error);
         }
     };
 
+    console.log('audiobook:', audiobook);
     return (
-        <div>
-            <h3>{audiobook.name}</h3>
-            <p>{audiobook.audioText}</p>
-            <button onClick={playAudio}>Listen</button>
+        <div className="p-8">
+            <h3 className="block mt-1 text-lg leading-tight font-medium text-black">{audiobook.name}</h3>
+            <p className="mt-2 text-gray-500">{audiobook.audioText}</p>
+            {!audiobook.audioFilePath && (
+                <button
+                    onClick={generateAudio}
+                    className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                >
+                    Generate
+                </button>
+            )}
+            <AudiobookPlayer audiobook_id={audiobook_id} />
         </div>
     );
 };

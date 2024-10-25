@@ -5,13 +5,16 @@ const audiobookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  audiobook_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
+  audioFilePath: {
+    type: String,
   },
   audioText: {
     type: String,
     required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

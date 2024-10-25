@@ -1,56 +1,61 @@
-const fs = require('fs');
-const path = require('path');
 const OpenAI = require('openai');
 const Audiobook = require('../models/audiobookModel');
+const fs = require('fs');
+const util = require('util');
+const path = require('path');
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY, // Ensure your OpenAI API key is in your .env file
-  });
-  
-  // Function to get audiobook and generate speech
-  const getAudiobookWithSpeech = async (req, res) => {
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
+// Function to get audiobook and generate speech
+const getAudiobookWithSpeech = async (req, res) => {
     try {
-      const audiobook = await Audiobook.findById(req.params.id);
-      if (!audiobook) {
-        return res.status(404).json({ message: 'Audiobook not found' });
-      }
-  
-      console.log('Generating speech for:', audiobook.audioText);
-  
-      const mp3 = await openai.audio.speech.create({
-        model: 'tts-1',
-        voice: 'alloy',
-        input: audiobook.audioText,
-      });
-  
-      console.log('Speech generated. Saving to file...');
-      const buffer = Buffer.from(await mp3.arrayBuffer());
-      await fs.promises.writeFile(`/tmp/audio_${audiobook._id}.mp3`, buffer);
-  
-      res.setHeader('Content-Type', 'audio/mpeg');
-      res.sendFile(`/tmp/audio_${audiobook._id}.mp3`);
+        const audiobook = await Audiobook.findById(req.params.id);
+        if (!audiobook) {
+            return res.status(404).json({ message: 'Audiobook not found' });
+        }
+
+        console.log('Generating speech for:', audiobook.audioText);
+
+        const mp3 = await openai.audio.speech.create({
+            model: 'tts-1',
+            voice: 'nova',
+            input: audiobook.audioText,
+        });
+
+        console.log('Speech generated. Saving to file...');
+        const buffer = Buffer.from(await mp3.arrayBuffer());
+        const filePath = path.join(__dirname, `../public/audio_${audiobook.name}.mp3`);
+        await fs.promises.writeFile(filePath, buffer);
+
+
+        // Update the audiobook object with the file path
+        audiobook.audioFilePath = `/audio_${audiobook.name}.mp3`;
+        await audiobook.save();
+
+        res.setHeader('Content-Type', 'audio/mpeg');
+        res.sendFile(filePath);
     } catch (error) {
-      if (error.code === 'insufficient_quota') {
-        console.error('You have exceeded your quota:', error.message);
-        return res.status(429).json({ message: 'You have exceeded your API quota. Please check your OpenAI plan.' });
-      }
-      console.error('Error generating audiobook speech:', error);
-      res.status(500).json({ message: 'Internal server error' });
+        if (error.code === 'insufficient_quota') {
+            console.error('You have exceeded your quota:', error.message);
+            return res.status(429).json({ message: 'You have exceeded your API quota. Please check your OpenAI plan.' });
+        }
+        console.error('Error generating audiobook speech:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
-  };
-
-
+};
 
 // Get all audiobooks
 const getAudiobooks = async (req, res) => {
     try {
-      const audiobooks = await Audiobook.find(); // Retrieve all audiobooks from the DB
-      res.status(200).json(audiobooks);
+        const audiobooks = await Audiobook.find(); // Retrieve all audiobooks from the DB
+        res.status(200).json(audiobooks);
     } catch (error) {
-      res.status(500).json({ message: 'Error retrieving audiobooks', error });
+        res.status(500).json({ message: 'Error retrieving audiobooks', error });
     }
-  };
-  
+};
+
 
 // Get a single audiobook
 const getAudiobook = async (req, res) => {

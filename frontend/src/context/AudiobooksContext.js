@@ -10,6 +10,12 @@ const audiobooksReducer = (state, action) => {
       return { audiobooks: [action.payload, ...state.audiobooks] };
     case 'DELETE_AUDIOBOOK':
       return { audiobooks: state.audiobooks.filter(audiobook => audiobook._id !== action.payload._id) };
+    case 'UPDATE_AUDIOBOOK':
+      return {
+        audiobooks: state.audiobooks.map(audiobook =>
+          audiobook._id === action.payload._id ? action.payload : audiobook
+        ),
+      };
     default:
       return state;
   }
