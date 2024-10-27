@@ -5,8 +5,8 @@ import DeleteAudiobookButton from './DeleteAudiobookButton';
 import GenerateAudioButton from './GenerateAudioButton';
 
 const Audiobook = ({ audiobook_id }) => {
-    const { audiobooks, dispatch } = useAudiobooksContext();
-    const audiobook = audiobooks.find((audiobook) => audiobook._id == audiobook_id);
+    const { audiobooks } = useAudiobooksContext();
+    const audiobook = audiobooks.find((audiobook) => audiobook._id === audiobook_id);
 
     return (
         <div className="relative p-8">

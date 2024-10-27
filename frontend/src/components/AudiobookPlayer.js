@@ -3,7 +3,7 @@ import { useAudiobooksContext } from '../hooks/useAudiobooksContext';
 
 const AudiobookPlayer = ({ audiobook_id }) => {
     const { audiobooks } = useAudiobooksContext();
-    const audiobook = audiobooks.find((audiobook) => audiobook._id == audiobook_id);
+    const audiobook = audiobooks.find((audiobook) => audiobook._id === audiobook_id);
     const audioRef = useRef(null);
     const [audioUrl, setAudioUrl] = useState('');
 

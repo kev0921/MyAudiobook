@@ -4,7 +4,6 @@ import AddAudiobookDialog from './AddAudiobookDialogue';
 import { FaPlus } from 'react-icons/fa';
 
 const AddAudiobookButton = () => {
-    const { dispatch } = useAudiobooksContext();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleAddClick = () => {

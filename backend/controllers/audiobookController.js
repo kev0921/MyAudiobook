@@ -1,7 +1,6 @@
 const OpenAI = require('openai');
 const Audiobook = require('../models/audiobookModel');
 const fs = require('fs');
-const util = require('util');
 const path = require('path');
 
 const openai = new OpenAI({
