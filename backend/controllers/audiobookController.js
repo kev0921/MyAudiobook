@@ -49,7 +49,7 @@ const getAudiobookWithSpeech = async (req, res) => {
 // Get all audiobooks
 const getAudiobooks = async (req, res) => {
     try {
-        const audiobooks = await Audiobook.find(); // Retrieve all audiobooks from the DB
+        const audiobooks = await Audiobook.find().sort({ createdAt: -1 });
         res.status(200).json(audiobooks);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving audiobooks', error });
@@ -87,7 +87,7 @@ const deleteAudiobook = async (req, res) => {
     const audiobook = await Audiobook.findById(req.params.id);
 
     if (audiobook) {
-        await audiobook.remove();
+        await Audiobook.deleteOne({ _id: req.params.id });
         res.json({ message: 'Audiobook removed' });
     } else {
         res.status(404);

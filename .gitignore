@@ -28,3 +28,6 @@ backend/node_modules/
 
 # Backend env
 backend/.env
+
+# Audio files
+backend/public/
