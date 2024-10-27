@@ -1,7 +1,7 @@
 # Getting Started with Create React App
 
 ### App Platform:
-My app is a web app, so it is mainly designed to be used in your web browser.
+My app is a web app, so it is mainly designed to be used in a web browser.
 
 ### Tech Stack:
 Frontend: React, TailwindCSS \
