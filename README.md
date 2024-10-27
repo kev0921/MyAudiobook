@@ -1,4 +1,4 @@
-# ReadMe.md Submission
+# Readme.md Submission
 
 ### App Platform:
 My application is a web app and is mainly designed to be used in a web browser.
