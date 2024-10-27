@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# ReadMe.md Submission
 
 ### App Platform:
 My application is a web app and is mainly designed to be used in a web browser.
