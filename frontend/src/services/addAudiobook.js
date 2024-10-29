@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const saveAudiobook = async (newAudiobook) => {
     try {
-        const response = await fetch('/api/audiobooks', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/audiobooks`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
