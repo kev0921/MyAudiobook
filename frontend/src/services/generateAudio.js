@@ -4,7 +4,7 @@ const generateAudio = async (audiobook, dispatch) => {
             console.log('Audio already loaded');
         } else {
             console.log('Fetching audio...');
-            const response = await fetch(`http://localhost:5001/api/audiobooks/${audiobook._id}/speech`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/audiobooks/${audiobook._id}/speech`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch audio');
