@@ -2,6 +2,7 @@ const fetchAudiobooks = async (dispatch) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/audiobooks`);
       
+      console.log("URL", `${process.env.REACT_APP_API_URL}/api/audiobooks`)
       const contentType = response.headers.get('content-type');
       console.log("Content-Type:", contentType);
   
