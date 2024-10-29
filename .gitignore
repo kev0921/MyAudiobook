@@ -30,7 +30,7 @@ backend/node_modules/
 backend/.env
 
 # Audio files
-backend/public/
+# backend/public/
 
 # Frontend env
 frontend/.env
